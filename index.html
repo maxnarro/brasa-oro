@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fuego &amp; Sal | Steakhouse Premium</title>
+<meta name="description" content="Fuego & Sal — Steakhouse de autor. Cortes premium a la parrilla de carbón, maridaje y una experiencia gastronómica de lujo.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🥩</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Playfair+Display:wght@500;600;700;800;900&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- PRELOADER -->
+  <transition name="fade-slow">
+    <div class="preloader" v-if="loading">
+      <div class="preloader-emblem">
+        <span class="preloader-ring"></span>
+        <span class="preloader-glyph">F&amp;S</span>
+      </div>
+      <p class="preloader-text">FUEGO &amp; SAL</p>
+    </div>
+  </transition>
+
+  <!-- SCROLL PROGRESS -->
+  <div class="scroll-progress" :style="{ width: scrollProgress + '%' }"></div>
+
+  <!-- NAVBAR -->
+  <header class="navbar" :class="{ 'is-scrolled': scrolled, 'is-open': mobileMenuOpen }">
+    <div class="navbar-inner">
+      <a href="#inicio" class="brand" @click.prevent="scrollTo('inicio')">
+        <span class="brand-mark">F<span class="brand-amp">&amp;</span>S</span>
+        <span class="brand-sub">STEAKHOUSE</span>
+      </a>
+
+      <nav class="nav-links" :class="{ open: mobileMenuOpen }">
+        <a v-for="s in sections" :key="s.id" :href="'#' + s.id"
+           class="nav-link" :class="{ active: activeSection === s.id }"
+           @click.prevent="scrollTo(s.id)">{{ s.label }}</a>
+      </nav>
+
+      <button class="btn btn-ghost nav-cta" @click="scrollTo('reservas')">Reservar</button>
+
+      <button class="hamburger" :class="{ open: mobileMenuOpen }" @click="mobileMenuOpen = !mobileMenuOpen" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="inicio" class="hero" @mousemove="handleHeroMove">
+    <div class="hero-spotlight" :style="{ '--x': heroX + '%', '--y': heroY + '%' }"></div>
+    <div class="hero-embers">
+      <span v-for="p in embers" :key="p.id" class="ember"
+            :style="{ left: p.left + '%', animationDuration: p.duration + 's', animationDelay: p.delay + 's', '--drift': p.drift + 'px' }"></span>
+    </div>
+    <div class="hero-grid-overlay"></div>
+
+    <div class="hero-content" v-reveal>
+      <p class="eyebrow"><span class="eyebrow-line"></span>Steakhouse de Autor desde 1998<span class="eyebrow-line"></span></p>
+      <h1 class="hero-title">
+        <span class="line">EL ARTE DEL</span>
+        <span class="line gold-text">FUEGO &amp; LA CARNE</span>
+      </h1>
+      <p class="hero-subtitle">Cortes premium madurados en seco, asados a la parrilla de carbón y coronados con
+        una selección de vinos excepcional. Una experiencia para los sentidos.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" @click="scrollTo('reservas')">
+          Reservar una Mesa
+        </button>
+        <button class="btn btn-outline" @click="scrollTo('menu')">Explorar el Menú</button>
+      </div>
+    </div>
+
+    <button class="scroll-cue" @click="scrollTo('nosotros')" aria-label="Bajar">
+      <span class="scroll-cue-line"></span>
+    </button>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats" ref="statsSection">
+    <div class="stats-inner">
+      <div class="stat" v-for="s in stats" :key="s.label" v-reveal>
+        <span class="stat-value gold-text">{{ s.current }}{{ s.suffix }}</span>
+        <span class="stat-label">{{ s.label }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE NOSOTROS -->
+  <section id="nosotros" class="about">
+    <div class="section-inner about-grid">
+      <div class="about-visual" v-reveal>
+        <div class="about-frame">
+          <div class="about-texture"></div>
+          <div class="about-badge">
+            <span class="gold-text about-badge-num">25</span>
+            <span class="about-badge-text">Años de Excelencia Culinaria</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-copy" v-reveal>
+        <p class="eyebrow"><span class="eyebrow-line"></span>Nuestra Historia</p>
+        <h2 class="section-title">Pasión por el <span class="gold-text">Fuego Vivo</span></h2>
+        <p class="about-text">
+          En Fuego &amp; Sal creemos que un gran corte no se cocina, se honra. Seleccionamos únicamente
+          carne Black Angus y Wagyu de productores certificados, madurada en cámara durante semanas para
+          concentrar su sabor, y la llevamos al punto exacto sobre brasas de quebracho.
+        </p>
+        <p class="about-text">
+          Cada mesa es una invitación a una experiencia completa: maridaje de autor, servicio impecable
+          y un ambiente donde el negro, el rojo y el dorado narran la misma historia que el plato.
+        </p>
+        <div class="about-signature">
+          <span class="about-signature-name">Chef Bruno Salieri</span>
+          <span class="about-signature-role">Chef Ejecutivo &amp; Fundador</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section id="menu" class="menu">
+    <div class="section-inner">
+      <div class="section-head" v-reveal>
+        <p class="eyebrow center"><span class="eyebrow-line"></span>Nuestra Carta<span class="eyebrow-line"></span></p>
+        <h2 class="section-title center">Cortes &amp; <span class="gold-text">Sabores</span> de Autor</h2>
+      </div>
+
+      <div class="menu-tabs" v-reveal>
+        <button v-for="cat in menuCategories" :key="cat"
+                class="menu-tab" :class="{ active: activeCategory === cat }"
+                @click="activeCategory = cat">{{ cat }}</button>
+      </div>
+
+      <transition-group name="menu-card" tag="div" class="menu-grid">
+        <article class="menu-item" v-for="item in filteredMenu" :key="item.id">
+          <div class="menu-item-icon" :class="'icon-' + item.iconType">
+            <svg v-if="item.iconType === 'fuego'" viewBox="0 0 24 24"><path d="M12 2c1 3-2 4-2 7a3 3 0 006 0c1.2 1 2 2.6 2 4.4A6.4 6.4 0 0111.6 20 6.6 6.6 0 015 13.4C5 9 8 7 9 4c.6 1 .6 2.2 0 3.4C10.4 6 11 4 12 2z"/></svg>
+            <svg v-else-if="item.iconType === 'hoja'" viewBox="0 0 24 24"><path d="M20 4C10 4 4 10 4 20c10 0 16-6 16-16z"/><path d="M5 19L19 5" stroke-linecap="round"/></svg>
+            <svg v-else-if="item.iconType === 'copa'" viewBox="0 0 24 24"><path d="M7 3h10l-1 6a4 4 0 01-8 0L7 3z"/><path d="M12 13v6M8 21h8" stroke-linecap="round"/></svg>
+            <svg v-else-if="item.iconType === 'postre'" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 5v2M12 17v2M5 12h2M17 12h2" stroke-linecap="round"/></svg>
+            <svg v-else viewBox="0 0 24 24"><path d="M4 12a8 8 0 1116 0 8 8 0 01-16 0z"/><path d="M9 9c1 2 5 2 6 0" stroke-linecap="round"/></svg>
+          </div>
+          <span v-if="item.tag" class="menu-item-tag">{{ item.tag }}</span>
+          <h3 class="menu-item-name">{{ item.name }}</h3>
+          <p class="menu-item-desc">{{ item.description }}</p>
+          <div class="menu-item-footer">
+            <span class="menu-item-dots"></span>
+            <span class="menu-item-price gold-text">${{ item.price }}</span>
+          </div>
+        </article>
+      </transition-group>
+    </div>
+  </section>
+
+  <!-- EXPERIENCIA -->
+  <section id="experiencia" class="experience">
+    <div class="section-inner">
+      <div class="section-head" v-reveal>
+        <p class="eyebrow center"><span class="eyebrow-line"></span>La Experiencia<span class="eyebrow-line"></span></p>
+        <h2 class="section-title center">Más que una <span class="gold-text">Cena</span></h2>
+      </div>
+      <div class="experience-grid">
+        <div class="experience-card" v-for="f in features" :key="f.title" v-reveal>
+          <div class="experience-icon">{{ f.emoji }}</div>
+          <h3>{{ f.title }}</h3>
+          <p>{{ f.text }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALERIA -->
+  <section id="galeria" class="gallery">
+    <div class="section-inner">
+      <div class="section-head" v-reveal>
+        <p class="eyebrow center"><span class="eyebrow-line"></span>Un Vistazo<span class="eyebrow-line"></span></p>
+        <h2 class="section-title center">Nuestra <span class="gold-text">Galería</span></h2>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item" v-for="(g, i) in gallery" :key="g.id"
+             :class="'span-' + g.size" v-reveal @click="openLightbox(i)">
+          <div class="gallery-visual" :style="{ '--gallery-img': 'url(' + g.image + ')' }"></div>
+          <div class="gallery-overlay">
+            <span>{{ g.caption }}</span>
+            <span class="gallery-plus">+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <transition name="fade">
+      <div class="lightbox" v-if="lightboxIndex !== null" @click.self="closeLightbox">
+        <button class="lightbox-close" @click="closeLightbox">&times;</button>
+        <button class="lightbox-nav prev" @click="prevImage">&#10094;</button>
+        <div class="lightbox-visual" :style="{ '--gallery-img': 'url(' + gallery[lightboxIndex].image + ')' }"></div>
+        <button class="lightbox-nav next" @click="nextImage">&#10095;</button>
+        <p class="lightbox-caption">{{ gallery[lightboxIndex].caption }}</p>
+      </div>
+    </transition>
+  </section>
+
+  <!-- TESTIMONIOS -->
+  <section id="testimonios" class="testimonials">
+    <div class="section-inner">
+      <div class="section-head" v-reveal>
+        <p class="eyebrow center"><span class="eyebrow-line"></span>Voces de Nuestros Comensales<span class="eyebrow-line"></span></p>
+        <h2 class="section-title center">Lo Que <span class="gold-text">Dicen</span></h2>
+      </div>
+
+      <div class="testimonial-carousel" v-reveal
+           @mouseenter="stopAutoplay" @mouseleave="startAutoplay">
+        <transition name="testi" mode="out-in">
+          <blockquote class="testimonial" :key="currentTestimonial">
+            <div class="testimonial-stars">
+              <span v-for="n in testimonials[currentTestimonial].rating" :key="n">&#9733;</span>
+            </div>
+            <p class="testimonial-text">&ldquo;{{ testimonials[currentTestimonial].text }}&rdquo;</p>
+            <footer>
+              <span class="testimonial-name">{{ testimonials[currentTestimonial].name }}</span>
+              <span class="testimonial-role">{{ testimonials[currentTestimonial].role }}</span>
+            </footer>
+          </blockquote>
+        </transition>
+
+        <div class="testimonial-dots">
+          <button v-for="(t, i) in testimonials" :key="i"
+                  class="dot" :class="{ active: i === currentTestimonial }"
+                  @click="goToTestimonial(i)" :aria-label="'Testimonio ' + (i+1)"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESERVAS -->
+  <section id="reservas" class="reservations">
+    <div class="section-inner reservations-grid">
+      <div class="reservations-copy" v-reveal>
+        <p class="eyebrow"><span class="eyebrow-line"></span>Reserve Su Mesa</p>
+        <h2 class="section-title">Una Noche <span class="gold-text">Inolvidable</span> le Espera</h2>
+        <p class="about-text">Complete el formulario y nuestro equipo confirmará su reserva a la brevedad.
+          Para grupos de más de 10 personas, contáctenos directamente.</p>
+        <ul class="reservations-info">
+          <li><strong>Horario:</strong> Mar–Dom · 19:00 – 23:30</li>
+          <li><strong>Teléfono:</strong> +1 (555) 234-0198</li>
+          <li><strong>Dirección:</strong> Av. del Fuego 452, Distrito Dorado</li>
+        </ul>
+      </div>
+
+      <form class="reservation-form" v-reveal @submit.prevent="submitReservation" novalidate>
+        <transition name="fade">
+          <div class="form-success" v-if="reservationSubmitted">
+            <span class="form-success-icon">&#10003;</span>
+            <h3>¡Reserva Recibida!</h3>
+            <p>Gracias, {{ reservationForm.nombre }}. Confirmaremos por email a la brevedad.</p>
+            <button type="button" class="btn btn-outline" @click="resetReservation">Nueva Reserva</button>
+          </div>
+        </transition>
+
+        <div v-if="!reservationSubmitted">
+          <div class="form-row">
+            <div class="form-field">
+              <label>Nombre completo</label>
+              <input type="text" v-model.trim="reservationForm.nombre" :class="{ error: errors.nombre }" placeholder="Su nombre">
+              <span class="field-error" v-if="errors.nombre">{{ errors.nombre }}</span>
+            </div>
+            <div class="form-field">
+              <label>Email</label>
+              <input type="email" v-model.trim="reservationForm.email" :class="{ error: errors.email }" placeholder="usted@correo.com">
+              <span class="field-error" v-if="errors.email">{{ errors.email }}</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Teléfono</label>
+              <input type="tel" v-model.trim="reservationForm.telefono" :class="{ error: errors.telefono }" placeholder="+1 555 000 0000">
+              <span class="field-error" v-if="errors.telefono">{{ errors.telefono }}</span>
+            </div>
+            <div class="form-field">
+              <label>Personas</label>
+              <select v-model="reservationForm.personas">
+                <option v-for="n in 10" :key="n" :value="n">{{ n }} {{ n === 1 ? 'persona' : 'personas' }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Fecha</label>
+              <input type="date" v-model="reservationForm.fecha" :min="todayISO" :class="{ error: errors.fecha }">
+              <span class="field-error" v-if="errors.fecha">{{ errors.fecha }}</span>
+            </div>
+            <div class="form-field">
+              <label>Hora</label>
+              <select v-model="reservationForm.hora" :class="{ error: errors.hora }">
+                <option value="" disabled>Seleccionar</option>
+                <option v-for="h in horas" :key="h" :value="h">{{ h }}</option>
+              </select>
+              <span class="field-error" v-if="errors.hora">{{ errors.hora }}</span>
+            </div>
+          </div>
+          <div class="form-field">
+            <label>Ocasión (opcional)</label>
+            <input type="text" v-model.trim="reservationForm.ocasion" placeholder="Aniversario, cumpleaños...">
+          </div>
+          <div class="form-field">
+            <label>Comentarios</label>
+            <textarea v-model.trim="reservationForm.comentarios" rows="3" placeholder="Alergias, preferencias de mesa..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary full">Confirmar Reserva</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contacto" class="footer">
+    <div class="section-inner footer-grid">
+      <div class="footer-brand">
+        <span class="brand-mark">F<span class="brand-amp">&amp;</span>S</span>
+        <p>Steakhouse de autor. Fuego, tradición y excelencia en cada corte desde 1998.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram" @click.prevent>◎</a>
+          <a href="#" aria-label="Facebook" @click.prevent>◐</a>
+          <a href="#" aria-label="Twitter" @click.prevent>✦</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <a v-for="s in sections" :key="s.id" href="#" @click.prevent="scrollTo(s.id)">{{ s.label }}</a>
+      </div>
+      <div class="footer-col">
+        <h4>Horarios</h4>
+        <p>Martes – Jueves<br><span class="gold-text">19:00 – 23:00</span></p>
+        <p>Viernes – Domingo<br><span class="gold-text">19:00 – 00:30</span></p>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <p>Av. del Fuego 452<br>Distrito Dorado</p>
+        <p>+1 (555) 234-0198<br>reservas@fuegoysal.com</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; {{ year }} Fuego &amp; Sal. Todos los derechos reservados.</p>
+      <p>Construido con Vue.js 3</p>
+    </div>
+  </footer>
+
+  <!-- BACK TO TOP -->
+  <transition name="fade">
+    <button class="back-to-top" v-if="showBackToTop" @click="scrollTo('inicio')" aria-label="Volver arriba">&#8593;</button>
+  </transition>
+
+</div>
+
+<script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
